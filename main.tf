@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.0.0"
+    }
+  }
+  required_version = ">= 1.2.0"
+}
+
 module "security_groups" {
   source = "../terraform-aws-vault-security-groups"
 
@@ -16,10 +26,11 @@ module "vault_configs" {
 }
 
 resource "aws_instance" "vault" {
+  count         = var.instance_count
   ami           = var.ami_id
   instance_type = var.instance_type
   key_name      = var.ssh_key_name
-  subnet_id     = var.subnet_id
+  subnet_id     = element(var.subnets, count.index)
   security_groups = [
     module.security_groups.member_group_id
   ]
@@ -31,6 +42,6 @@ resource "aws_instance" "vault" {
   }
 
   tags = {
-    Name = var.name
+    Name = "${var.name}-${count.index}"
   }
 }

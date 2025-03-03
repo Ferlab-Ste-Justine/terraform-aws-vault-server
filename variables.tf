@@ -19,9 +19,9 @@ variable "ssh_key_name" {
   type        = string
 }
 
-variable "subnet_id" {
-  description = "ID du subnet où l'instance sera créée"
-  type        = string
+variable "subnets" {
+  description = "Liste des subnets où les instances seront créées"
+  type        = list(string)
 }
 
 variable "member_group_name" {
@@ -43,4 +43,10 @@ variable "volume_size" {
   description = "Taille du volume de stockage en GiB"
   type        = number
   default     = 20
+}
+
+variable "instance_count" {
+  description = "Nombre d'instances Vault à créer"
+  type        = number
+  default     = 1
 }
